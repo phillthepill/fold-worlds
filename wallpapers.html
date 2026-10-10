@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fold Worlds Wallpapers</title>
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="theme-color" content="#0e1016">
+<style>
+  :root{--bg:#0e1016;--panel:#171a22;--line:#272c37;--text:#e8ebf1;--dim:#949db0;--acc:#ffd27a}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  main{max-width:880px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 20px) 16px calc(env(safe-area-inset-bottom) + 40px)}
+  h1{font-size:28px;margin:0 0 4px}
+  h2{font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--acc);margin:32px 0 10px}
+  p{margin:0 0 10px;color:var(--dim)}
+  a{color:var(--acc)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .card img{display:block;width:100%;aspect-ratio:430/932;object-fit:cover;background:#000}
+  .card .meta{padding:8px 10px 10px}
+  .card b{display:block;font-size:15px}
+  .card .row{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+  .btn{display:inline-block;padding:6px 10px;border-radius:9px;background:#232836;border:1px solid var(--line);color:var(--text);text-decoration:none;font-size:13px}
+  ol{padding-left:22px;color:var(--dim)} ol li{margin:6px 0} ol b{color:var(--text)}
+  code{background:#1d212b;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px;color:var(--text);word-break:break-all}
+  .note{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Fold Worlds wallpapers</h1>
+  <p>Every world, painted for a phone screen at every two hours of the day. The pictures match the time, so a Shortcut can swap your wallpaper as the day goes on.</p>
+  <p><a href="index.html">Open the living worlds</a>: tap Share, then <b>Add to Home Screen</b>, to keep them as an app.</p>
+
+  <h2>Worlds, right now</h2>
+  <div class="grid" id="grid"></div>
+
+  <h2>Wallpaper that follows the time of day</h2>
+  <div class="note">
+  <ol>
+    <li>Open <b>Shortcuts</b>, tap <b>+</b>, name it <b>World Wallpaper</b>.</li>
+    <li>Add <b>Format Date</b>: Date = <b>Current Date</b>, Format = <b>Custom</b>, Format String = <code>H</code>.</li>
+    <li>Add <b>Calculate</b>: Formatted Date <b>÷</b> <code>2</code>.</li>
+    <li>Add <b>Round Number</b>: Mode = <b>Always Round Down</b>.</li>
+    <li>Add <b>Calculate</b>: Rounded Number <b>×</b> <code>2</code>.</li>
+    <li>Add <b>URL</b>: <code id="urlpat"></code> and put the last <b>Calculation Result</b> where it says <code>HOUR</code>. Change <code>lava</code> to any world name below.</li>
+    <li>Add <b>Get Contents of URL</b>, then <b>Set Wallpaper Photo</b> (choose Lock Screen, Home Screen or both; turn off <b>Show Preview</b>).</li>
+    <li>Go to <b>Automation</b> › <b>+</b> › <b>Time of Day</b>. Make one for each time you want a change (say 6 am, 9 am, noon, 5 pm, 7 pm, 10 pm), choose <b>Run Immediately</b>, and run <b>World Wallpaper</b>.</li>
+  </ol>
+  <p>World names: <code id="names"></code></p>
+  </div>
+
+  <h2>Moving lock screen (Live Photo)</h2>
+  <div class="note">
+    <p>Each world also has a short looping video (the <b>Loop</b> button). iPhone only moves Live Photos on the lock screen, so turn the video into one first:</p>
+    <ol>
+      <li>Open the loop and save it to Photos (Share › Save Video).</li>
+      <li>Convert it with a free app such as <b>intoLive</b> (choose Live Photo, no repeat needed).</li>
+      <li>Settings › Wallpaper › Add New › Photos, pick the Live Photo, and tap the play icon so it moves.</li>
+    </ol>
+  </div>
+</main>
+<script>
+  var W=[['highland','Highland'],['shore','Shoreline'],['colony','Ant Colony'],['snow','Snowfield'],['frost','Frost'],['greenhouse','Greenhouse'],['rain','Rain'],['savanna','Savanna'],['canyon','Canyon'],['volcano','Volcano'],['pond','Beaver Pond'],['terraces','Rice Terraces'],['fireworks','Fireworks'],['miami','Miami'],['neon','Neon'],['deep','Deep Field'],['lava','Lava Lamp']];
+  var base=location.href.replace(/[^/]*$/,'');
+  var hr=Math.floor(new Date().getHours()/2)*2;
+  var g=document.getElementById('grid');
+  W.forEach(function(w){
+    var c=document.createElement('div');c.className='card';
+    var still='wall/'+w[0]+'/'+hr+'.jpg';
+    c.innerHTML='<a href="'+still+'"><img loading="lazy" alt="" src="'+still+'"></a><div class="meta"><b>'+w[1]+'</b><div class="row">'+
+      '<a class="btn" href="'+still+'">Still</a><a class="btn" href="loops/'+w[0]+'.mp4">Loop</a><a class="btn" href="index.html#k='+w[0]+'">Live</a></div></div>';
+    g.appendChild(c);
+  });
+  document.getElementById('urlpat').textContent=base+'wall/lava/HOUR.jpg';
+  document.getElementById('names').textContent=W.map(function(w){return w[0];}).join(', ');
+</script>
+</body>
+</html>
